@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2012 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Message">
+
+  <resultMap type="com.imooc.bean.Message" id="MessageResult">
+    <id column="name" jdbcType="VARCHAR" property="name"/>
+    <result column="address" jdbcType="VARCHAR" property="address"/>
+    <result column="jpgurl" jdbcType="VARCHAR" property="jpgURL"/>
+    <result column="avgScore" jdbcType="VARCHAR" property="avgScore"/>
+    <result column="allCommentNum" jdbcType="VARCHAR" property="allCommentNum"/>
+    <result column="avgPrice" jdbcType="VARCHAR" property="avgPrice"/>
+  </resultMap>
+
+  <select id="selectshop" parameterType="String" resultMap="MessageResult">
+    SELECT * FROM shopmessage WHERE name = #{name}
+  </select>
+  
+  <select id="similarnameselect" parameterType="com.imooc.bean.Message" resultMap="MessageResult">
+    select * from shopmessage
+        <where>
+        <!--方法三: 使用 bind 标签,对字符串进行绑定,然后对绑定后的字符串使用 like 关键字进行模糊查询 -->
+            <if test="name != null">
+                <bind name="pattern" value="'%'+name+'%'"/>
+                and name like #{pattern}
+            </if>
+            <if test="address != null">
+                <bind name="pattern1" value="'%'+address+'%'"/>
+                and address like #{pattern1}
+            </if>
+        </where>
+  </select>
+  
+  <insert id="insertshop" parameterType="com.imooc.bean.Message">
+  insert into shopmessage (name,address,jpgurl,avgScore,allCommentNum,avgPrice)
+  values (#{name}, #{address}, #{jpgurl}, #{avgScore}, #{allCommentNum}, #{avgPrice})
+</insert>
+  
+</mapper>
